@@ -1,47 +1,15 @@
 <?php
 
-class MicroCollectionHandler
+class MicroCollection extends \Phalcon\Mvc\Micro\Collection
 {
-    public $collection,$handlerIndex;
-
-    public function __construct($collection,$handlerIndex)
+    public function setName($name)
     {
-        $this->collection = $collection;
-        $this->handlerIndex = $handlerIndex;
+        $this->_handlers[count($this->_handlers)-1][3] = $name;
+        return $this;
     }
     public function via($methods)
     {
-        $this->collection->updateHandlerVia($this->handlerIndex , $methods);
+        $this->_handlers[count($this->_handlers)-1][0] = $methods;
         return $this;
-    }
-    public function setName($name)
-    {
-        $this->collection->updateHandlerName($this->handlerIndex , $name);
-        return $this;
-    }
-}
-
-class MicroCollection extends \Phalcon\Mvc\Micro\Collection
-{
-    public function updateHandlerName($handlerIndex, $name)
-    {
-        $this->_handlers[$handlerIndex][3] = $name;
-    }
-    public function updateHandlerVia($handlerIndex, $methods)
-    {
-        $this->_handlers[$handlerIndex][0] = $methods;
-    }
-    public function map($routePattern, $handler, $name = NULL)
-    {
-        parent::map($routePattern, $handler);
-        $handlerIndex = count($this->_handlers)-1;
-        $handler = $this->_handlers[$handlerIndex];
-        return new MicroCollectionHandler($this,$handlerIndex);
-    }
-    public function get($routePattern, $handler, $name = NULL)
-    {
-        parent::get($routePattern, $handler);
-        $handlerIndex = count($this->_handlers)-1;
-        return new MicroCollectionHandler($this,$handlerIndex);
     }
 }
